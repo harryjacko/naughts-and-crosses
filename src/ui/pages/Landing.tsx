@@ -42,8 +42,8 @@ const Landing: React.FC = () => {
   }, [dispatch]);
 
   const handleNewGameClick = useCallback(() => {
-    console.log("NEW GAME");
-  }, []);
+    dispatch(actions.game.startNewGame.base());
+  }, [dispatch]);
 
   return (
     <Container maxWidth="xs">
@@ -59,9 +59,13 @@ const Landing: React.FC = () => {
           Continue game
         </LoadingButton>
         <Space verticaloffset={2} />
-        <Button variant="contained" onClick={handleNewGameClick}>
+        <LoadingButton
+          variant="contained"
+          onClick={handleNewGameClick}
+          isLoading={gameRequestStatus === RequestStatus.Pending}
+        >
           Start new game
-        </Button>
+        </LoadingButton>
       </Wrapper>
     </Container>
   );

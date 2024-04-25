@@ -23,8 +23,44 @@ function* fetchGameStatus(): SagaIterator {
   }
 }
 
+function* startNewGame(): SagaIterator {
+  try {
+    yield put(actions.game.startNewGame.request());
+
+    const apiResult: ApiResponse<GameState> = yield call(api.game.startNewGame);
+
+    if (apiResult.ok && !!apiResult.data) {
+      yield put(actions.game.startNewGame.success(apiResult.data));
+    } else {
+      yield put(actions.game.startNewGame.failed());
+    }
+  } catch (error) {
+    yield put(actions.game.startNewGame.failed(error as Error));
+  }
+}
+
+function* makeMove(action: { type: string; payload: number }): SagaIterator {
+  try {
+    yield put(actions.game.makeMove.request());
+
+    const apiResult: ApiResponse<GameState> = yield call(api.game.makeMove, {
+      position: action.payload,
+    });
+
+    if (apiResult.ok && !!apiResult.data) {
+      yield put(actions.game.makeMove.success(apiResult.data));
+    } else {
+      yield put(actions.game.makeMove.failed());
+    }
+  } catch (error) {
+    yield put(actions.game.makeMove.failed(error as Error));
+  }
+}
+
 export default function* gameSagas() {
   yield all([
     takeLatest([actions.game.fetchGameStatus.base.type], fetchGameStatus),
+    takeLatest([actions.game.makeMove.base.type], makeMove),
+    takeLatest([actions.game.startNewGame.base.type], startNewGame),
   ]);
 }

@@ -1,9 +1,12 @@
 import { Container, Typography } from "@mui/material";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { selectors } from "../../domain/rootSelectors";
 import styled from "styled-components";
 import { useCallback } from "react";
 import Space from "../components/Space";
+import { actions } from "../../domain/rootActions";
+import LoadingButton from "../components/LoadingButton";
+import { RequestStatus } from "../../shared/libs/apiClient";
 
 const Wrapper = styled.div`
   display: flex;
@@ -23,14 +26,14 @@ const StyledBoard = styled.div`
   grid-template-columns: repeat(3, 1fr);
   grid-gap: 5px;
   width: 95%;
-  aspect-ratio: 1/1;
+  aspect-ratio: 1;
   min-width: 200px;
 `;
 
 const Square = styled.div`
   cursor: pointer;
   width: 100%;
-  height: 100%;
+  aspect-ratio: 1;
   background-color: #eee;
   display: flex;
   justify-content: center;
@@ -42,19 +45,36 @@ const Game: React.FC = () => {
   const currentPlayer = useSelector(selectors.game.getCurrentPlayer);
   const winner = useSelector(selectors.game.getWinner);
   const gameOver = useSelector(selectors.game.getGameOver);
+  const gameRequestStatus = useSelector(
+    selectors.game.getGameStatusRequestStatus
+  );
+  const dispatch = useDispatch();
+
+  const handleNewGameClick = useCallback(() => {
+    dispatch(actions.game.startNewGame.base());
+  }, [dispatch]);
 
   const renderSquares = useCallback(() => {
     return board.cells.map((cell, index) => {
       const handeOnSquareClick = () => {
-        console.log("Clicked on: ", index);
+        if (gameOver) {
+          console.log("Game Over, can't make move");
+          return;
+        }
+        dispatch(actions.game.makeMove.base(index));
       };
       return (
         <Square key={`square-${index}`} onClick={handeOnSquareClick}>
-          {cell}
+          <Typography
+            variant="h5"
+            color={winner === cell ? "#00b809" : "primary"}
+          >
+            {cell}
+          </Typography>
         </Square>
       );
     });
-  }, [board]);
+  }, [board, dispatch, gameOver]);
 
   return (
     <Container maxWidth="xs">
@@ -68,8 +88,16 @@ const Game: React.FC = () => {
         <Typography variant="body1">Current player: {currentPlayer}</Typography>
         <Typography variant="body1">Winner: {winner ?? "Not yet"}</Typography>
         <Typography variant="body1">
-          Game over: {gameOver ?? "Not yet"}
+          Game over: {gameOver ? "Yes" : "Not yet"}
         </Typography>
+        <Space verticaloffset={2} />
+        <LoadingButton
+          variant="outlined"
+          onClick={handleNewGameClick}
+          isLoading={gameRequestStatus === RequestStatus.Pending}
+        >
+          Start new game
+        </LoadingButton>
       </Wrapper>
     </Container>
   );
