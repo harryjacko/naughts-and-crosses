@@ -84,6 +84,17 @@ const Game: React.FC = () => {
     });
   }, [board, dispatch, gameOver, winner]);
 
+  const checkWinner = useCallback(() => {
+    if (winner) {
+      return winner;
+    }
+
+    if (gameOver) {
+      return "Draw";
+    }
+
+    return "Not yet";
+  }, [winner, gameOver]);
   return (
     <Container maxWidth="xs">
       <Wrapper>
@@ -94,7 +105,7 @@ const Game: React.FC = () => {
         </BoardContainer>
         <Space verticaloffset={4} />
         <Typography variant="body1">Current player: {currentPlayer}</Typography>
-        <Typography variant="body1">Winner: {winner ?? "Not yet"}</Typography>
+        <Typography variant="body1">Winner: {checkWinner()}</Typography>
         <Space verticaloffset={2} />
         <LoadingButton
           variant="outlined"
