@@ -1,8 +1,9 @@
+import { useCallback, useEffect } from "react";
 import { Container, Typography } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
+
 import { selectors } from "../../domain/rootSelectors";
 import styled from "styled-components";
-import { useCallback } from "react";
 import Space from "../components/Space";
 import { actions } from "../../domain/rootActions";
 import LoadingButton from "../components/LoadingButton";
@@ -41,6 +42,8 @@ const Square = styled.div`
 `;
 
 const Game: React.FC = () => {
+  const dispatch = useDispatch();
+
   const board = useSelector(selectors.game.getBoard);
   const currentPlayer = useSelector(selectors.game.getCurrentPlayer);
   const winner = useSelector(selectors.game.getWinner);
@@ -48,7 +51,12 @@ const Game: React.FC = () => {
   const gameRequestStatus = useSelector(
     selectors.game.getGameStatusRequestStatus
   );
-  const dispatch = useDispatch();
+
+  useEffect(() => {
+    if (board.cells.length < 1) {
+      dispatch(actions.game.fetchGameStatus.base());
+    }
+  });
 
   const handleNewGameClick = useCallback(() => {
     dispatch(actions.game.startNewGame.base());
@@ -74,7 +82,7 @@ const Game: React.FC = () => {
         </Square>
       );
     });
-  }, [board, dispatch, gameOver]);
+  }, [board, dispatch, gameOver, winner]);
 
   return (
     <Container maxWidth="xs">
@@ -87,9 +95,6 @@ const Game: React.FC = () => {
         <Space verticaloffset={4} />
         <Typography variant="body1">Current player: {currentPlayer}</Typography>
         <Typography variant="body1">Winner: {winner ?? "Not yet"}</Typography>
-        <Typography variant="body1">
-          Game over: {gameOver ? "Yes" : "Not yet"}
-        </Typography>
         <Space verticaloffset={2} />
         <LoadingButton
           variant="outlined"

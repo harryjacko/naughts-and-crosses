@@ -1,8 +1,9 @@
-import { all, put, takeLatest, call } from "redux-saga/effects";
-import { actions } from "../../rootActions";
-import { api } from "../../rootApi";
 import { SagaIterator } from "redux-saga";
 import { ApiResponse } from "apisauce";
+import { all, put, takeLatest, call } from "redux-saga/effects";
+
+import { actions } from "../../rootActions";
+import { api } from "../../rootApi";
 import { GameState } from "../types";
 
 function* fetchGameStatus(): SagaIterator {
