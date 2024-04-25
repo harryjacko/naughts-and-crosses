@@ -88,13 +88,12 @@ const Game: React.FC = () => {
     if (winner) {
       return winner;
     }
-
     if (gameOver) {
       return "Draw";
     }
-
     return "Not yet";
   }, [winner, gameOver]);
+
   return (
     <Container maxWidth="xs">
       <Wrapper>
