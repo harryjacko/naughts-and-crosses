@@ -1,12 +1,15 @@
 import { Button, Container, Typography } from "@mui/material";
 import styled from "styled-components";
 import Space from "../components/Space";
-import { useCallback } from "react";
+import { useCallback, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { actions } from "../../domain/rootActions";
 import { selectors } from "../../domain/rootSelectors";
 import LoadingButton from "../components/LoadingButton";
-import { RequestStatus } from "../../libs/apiClient";
+import { RequestStatus } from "../../shared/libs/apiClient";
+import { usePrevious } from "../../shared/hooks/usePrevious";
+import { useNavigate } from "react-router-dom";
+import { ROUTES } from "../App";
 
 const Wrapper = styled.div`
   display: flex;
@@ -18,9 +21,21 @@ const Wrapper = styled.div`
 
 const Landing: React.FC = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const gameRequestStatus = useSelector(
     selectors.game.getGameStatusRequestStatus
   );
+
+  const prevGameRequestStatus = usePrevious(gameRequestStatus);
+
+  useEffect(() => {
+    if (
+      prevGameRequestStatus === RequestStatus.Pending &&
+      gameRequestStatus === RequestStatus.Fulfilled
+    ) {
+      navigate(ROUTES.Game);
+    }
+  });
 
   const handleContinueGameClick = useCallback(() => {
     dispatch(actions.game.fetchGameStatus.base());

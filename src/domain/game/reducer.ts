@@ -1,7 +1,7 @@
 import { createReducer } from "@reduxjs/toolkit";
 import { GameState } from "./types";
 import { gameActions } from "./actions";
-import { RequestStatus } from "../../libs/apiClient";
+import { RequestStatus } from "../../shared/libs/apiClient";
 
 const initialState: GameState = {
   board: {

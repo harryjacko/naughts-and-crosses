@@ -1,4 +1,4 @@
-import { RequestStatus } from "../../libs/apiClient";
+import { RequestStatus } from "../../shared/libs/apiClient";
 
 export interface GameState {
   board: Board;
@@ -14,6 +14,6 @@ export interface GameState {
 
 type Mark = "X" | "O" | null;
 
-interface Board {
+export interface Board {
   cells: Mark[];
 }

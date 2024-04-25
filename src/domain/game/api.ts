@@ -1,4 +1,4 @@
-import baseAPIClient from "../../libs/apiClient";
+import baseAPIClient from "../../shared/libs/apiClient";
 import { GameState } from "./types";
 
 const gameAPIService = {
