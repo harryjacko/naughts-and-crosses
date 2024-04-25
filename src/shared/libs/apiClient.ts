@@ -1,6 +1,6 @@
 import { create } from "apisauce";
 
-const BASE_URL = "http://localhost:3000"; // TODO: pull from .env
+const BASE_URL = process.env.REACT_APP_BASE_URL;
 
 const headers = {
   Accept: "application/json",
