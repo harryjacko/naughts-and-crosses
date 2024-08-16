@@ -1,3 +1,8 @@
+# Technical assessment for job interview
+Quick and dirty naughts and crosses app for technical assesment. 
+
+Full redux state management was used showcase I had experience using it. I would've used something simple (e.g. React Context API).
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
